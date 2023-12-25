@@ -20,4 +20,8 @@
     <string name="share_app"> Поделиться </string>
     <string name="call_center"> Call center </string>
     <string name="agreement"> Пользовательское соглашение</string>
+    <string name="nothing_found">Ничего не нашлось</string>
+    <string name="internet_problem">Проблемы со связью</string>
+    <string name="check_internet">Загрузка не удалась. Проверьте подключение к интернету</string>
+    <string name="refresh">Обновить</string>
 </resources>
