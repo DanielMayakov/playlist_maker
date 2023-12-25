@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="support_mail">danil.mayakov@yandex.ru</string>
+    <string name="subject">Some random subject</string>
+    <string name="message">Some random message </string>
+    <string name="agreement_link">https://yandex.ru/legal/practicum_offer/</string>
+    <string name="support_share_link">https://practicum.yandex.ru/profile/android-developer/</string>
+    <string name="black_theme"> Ночная тема </string>
+    <string name="share_app"> Поделиться </string>
+    <string name="call_center"> Call center </string>
+    <string name="agreement"> Пользовательское соглашение</string>
+</resources>

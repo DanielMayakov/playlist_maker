@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Playlist Maker</string>
+    <string name="title" translatable="false">Playlist maker</string>
+    <string name="search" translatable="false">Поиск</string>
+    <string name="search_hint" translatable="false">Поиск</string>
+    <string name="media" translatable="false">Медиатека</string>
+    <string name="settings" translatable="false">Настройки</string>
+    <string name="settings2" translatable="false">Настройки</string>
+    <string name="media_text" translatable="false">это Активити для Медиатеки, скоро тут что-то будет !</string>
+    <string name="search_text" translatable="false">Это Активити для Поиска, скоро тут что-то будет !</string>
+    <string name="back" translatable="false">Назад</string>
+    <string name="not_found_app">Не найдено подходящих приложений</string>
+    <string name="clear_search">Очистить поисковый запрос</string>
+    <string name="support_mail">danil.mayakov@yandex.ru</string>
+    <string name="subject">Some random subject</string>
+    <string name="message">Some random message </string>
+    <string name="agreement_link">https://yandex.ru/legal/practicum_offer/</string>
+    <string name="support_share_link">https://practicum.yandex.ru/profile/android-developer/</string>
+    <string name="black_theme"> Ночная тема </string>
+    <string name="share_app"> Поделиться </string>
+    <string name="call_center"> Call center </string>
+    <string name="agreement"> Пользовательское соглашение</string>
+</resources>
