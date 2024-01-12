@@ -8,7 +8,7 @@
         style="@style/ToolbarColor"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="@dimen/marginBottom_24"
         app:navigationIcon="@drawable/ic_baseline_arrow_back_24">
 
         <TextView
@@ -34,17 +34,19 @@
             android:layout_marginHorizontal="@dimen/margin_horizontal"
             android:background="@drawable/round_edittext_back"
             android:drawableStart="@drawable/ic_baseline_search_24"
-            android:drawablePadding="8dp"
+            android:drawablePadding="@dimen/padding_8"
             android:drawableTint="@color/search_form_text_hint_color"
             android:fontFamily="@font/ys_display"
             android:hint="@string/search_hint"
+            android:imeOptions="actionDone"
             android:importantForAutofill="no"
             android:inputType="text"
             android:maxLength="255"
             android:maxLines="1"
-            android:padding="8dp"
+            android:padding="@dimen/padding_8"
             android:paddingStart="12dp"
             android:paddingEnd="32dp"
+            android:singleLine="true"
             android:textColor="@color/search_form_text_color"
             android:textColorHint="@color/search_form_text_hint_color"
             android:textCursorDrawable="@drawable/color_cursor"
@@ -57,7 +59,7 @@
             android:layout_gravity="end"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="12dp"
-            android:padding="16dp"
+            android:padding="@dimen/padding_16"
             android:visibility="gone"
             app:srcCompat="@drawable/baseline_clear_24"
             app:tint="@color/search_form_text_hint_color"
@@ -65,11 +67,54 @@
 
     </FrameLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/searchRecycler"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingHorizontal="@dimen/padding_16"
-        android:paddingTop="@dimen/padding_24" />
+        android:layout_height="match_parent">
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/searchRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/padding_16"
+            android:paddingTop="@dimen/padding_24" />
+
+        <TextView
+            android:id="@+id/nothingFound"
+            style="@style/placeholder_not_found"
+            android:layout_marginTop="@dimen/layout_marginTop_80"
+            android:text="@string/nothing_found"
+            android:visibility="gone"
+            app:drawableTopCompat="@drawable/nothing_found" />
+
+        <LinearLayout
+            android:id="@+id/internetProblem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_horizontal_24"
+            android:layout_marginTop="@dimen/layout_marginTop_80"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="@dimen/layout_120"
+                android:layout_height="@dimen/layout_120"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/internet_problem"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                style="@style/placeholder_internet_problem"
+                android:text="@string/internet_problem" />
+
+            <TextView
+                style="@style/placeholder_internet_problem"
+                android:text="@string/check_internet" />
+
+            <Button
+                android:id="@+id/refreshButton"
+                style="@style/refresh_button"
+                app:cornerRadius="54dp" />
+
+        </LinearLayout>
+    </FrameLayout>
 </LinearLayout>
