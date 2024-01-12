@@ -76,7 +76,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingHorizontal="@dimen/padding_16"
-            android:paddingTop="@dimen/padding_24" />
+            android:paddingTop="@dimen/padding_24"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
         <TextView
             android:id="@+id/nothingFound"
@@ -113,8 +114,31 @@
             <Button
                 android:id="@+id/refreshButton"
                 style="@style/refresh_button"
-                app:cornerRadius="54dp" />
+                android:text="@string/refresh"
+                app:cornerRadius="@dimen/corner_radius_54" />
+        </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/searchHistory_layout"
+            style="@style/searchHistory_layout"
+            android:visibility="gone">
+
+            <TextView
+                style="@style/searchHistory_textView"
+                android:text="@string/you_searched" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/searchHistoryRecycler"
+                style="@style/searchHistory_recyclerView"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+            <Button
+                android:id="@+id/clearHistoryButton"
+                style="@style/refresh_button"
+                android:layout_marginTop="@dimen/marginTop_16"
+                android:fontFamily="@font/ys_display"
+                android:text="@string/clear_history"
+                app:cornerRadius="@dimen/corner_radius_54" />
         </LinearLayout>
     </FrameLayout>
 </LinearLayout>

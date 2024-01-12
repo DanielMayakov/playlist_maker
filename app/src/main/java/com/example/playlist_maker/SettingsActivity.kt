@@ -2,14 +2,11 @@ package com.example.playlist_maker
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
-import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
+import androidx.core.content.edit
 import com.example.playlist_maker.databinding.ActivitySettingsBinding
 
 
@@ -58,7 +55,7 @@ class SettingsActivity : AppCompatActivity() {
 
         settingBinding.agreementTextView.setOnClickListener {
             val sendIntent = Intent(Intent.ACTION_VIEW)
-            sendIntent.data = Uri.parse(getString(R.string.agreement_link))
+            intent.data = Uri.parse(getString(R.string.agreement_link))
             try {
                 startActivity(sendIntent)
             } catch (ex: ActivityNotFoundException) {
@@ -70,17 +67,11 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
 
-        settingBinding.switch1.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_YES)
-            } else {
-                AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_NO)
-            }
-        }
-
-        when (resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)) {
-            Configuration.UI_MODE_NIGHT_YES -> settingBinding.switch1.isChecked = true
-            Configuration.UI_MODE_NIGHT_NO -> settingBinding.switch1.isChecked = false
+        val sharedPrefs = getSharedPreferences(App.PLAYLIST_MAKER_SHARED_PREFS, MODE_PRIVATE)
+        settingBinding.switch1.isChecked = (applicationContext as App).darkTheme
+        settingBinding.switch1.setOnCheckedChangeListener { _, checked ->
+            (applicationContext as App).switchTheme(checked)
+            sharedPrefs.edit { putBoolean(App.DARK_THEME_KEY, checked) }
         }
     }
 }
