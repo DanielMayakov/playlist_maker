@@ -17,15 +17,17 @@ class TrackAdapter(private val clickListener: TrackClickListener) :
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.track_item, parent, false)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.track_item, parent, false)
         return TrackViewHolder(view)
     }
 
     override fun getItemCount() = tracks.size
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
-        holder.bind(tracks[position])
-        holder.itemView.setOnClickListener { clickListener.onTrackClick(tracks[position]) }
+        val track = tracks[position]
+        holder.bind(track)
+        holder.itemView.setOnClickListener { clickListener.onTrackClick(track) }
     }
 
     fun interface TrackClickListener {

@@ -5,10 +5,10 @@ import android.os.Bundle
 import com.example.playlist_maker.databinding.ActivityMediaLibraryBinding
 
 class MediaLibraryActivity : AppCompatActivity() {
-    private lateinit var mediaBinding: ActivityMediaLibraryBinding
+    private var mediaBinding: ActivityMediaLibraryBinding? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mediaBinding = ActivityMediaLibraryBinding.inflate(layoutInflater)
-        setContentView(mediaBinding.root)
+        setContentView(mediaBinding?.root)
     }
 }
