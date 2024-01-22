@@ -1,14 +1,13 @@
 package com.example.playlist_maker
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
+import androidx.core.widget.doOnTextChanged
 import com.example.playlist_maker.databinding.ActivitySearchBinding
 import retrofit2.Call
 import retrofit2.Callback
@@ -17,8 +16,13 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
-
+    lateinit var searchBinding: ActivitySearchBinding
     private val tracksBaseUrl = "https://itunes.apple.com"
+    private var searchInputQuery = ""
+    private val searchHistory by lazy {
+        val sharedPrefs = getSharedPreferences(App.PLAYLIST_MAKER_SHARED_PREFS, MODE_PRIVATE)
+        SearchHistory(sharedPrefs)
+    }
 
     private val retrofit = Retrofit.Builder()
         .baseUrl(tracksBaseUrl)
@@ -26,28 +30,18 @@ class SearchActivity : AppCompatActivity() {
         .build()
 
     private val tracksApi = retrofit.create(TracksApi::class.java)
-    private val adapter = TrackAdapter()
 
-    companion object {
-        const val SEARCH_QUERY = "SEARCH_QUERY"
+    private val trackAdapter = TrackAdapter {
+        searchHistory.addTrack(it)
+    }
+    private val historyAdapter = TrackAdapter {
+        searchHistory.addTrack(it)
     }
 
-    lateinit var searchBinding: ActivitySearchBinding
-    private var searchInputQuery = ""
-
-    private val simpleTextWatcher = object : TextWatcher {
-        override fun onTextChanged(s: CharSequence?, s1: Int, s2: Int, s3: Int) {
-            if (s.isNullOrEmpty()) {
-                searchBinding.clearImageView.visibility = GONE
-            } else {
-                searchBinding.clearImageView.visibility = VISIBLE
-            }
-            searchInputQuery = s.toString()
-        }
-
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-        override fun afterTextChanged(s: Editable?) {}
-
+    companion object {
+        const val SEARCH_QUERY = "search_query"
+        const val TRACKS_HISTORY_KEY = "tracks_history_key"
+        const val TRACKS_HISTORY_SIZE = 10
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,17 +50,25 @@ class SearchActivity : AppCompatActivity() {
         setContentView(searchBinding.root)
 
         searchBinding.inputEditText.requestFocus()
-
         searchBinding.settingsToolbar.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
-        searchBinding.clearImageView.setOnClickListener { clearSearchForm() }
-        searchBinding.inputEditText.addTextChangedListener(simpleTextWatcher)
 
-        searchBinding.searchRecycler.layoutManager = LinearLayoutManager(
-            this,
-            LinearLayoutManager.VERTICAL,
-            false
-        )
-        searchBinding.searchRecycler.adapter = adapter
+        searchBinding.clearImageView.setOnClickListener { clearSearchForm() }
+        searchBinding.inputEditText.doOnTextChanged { text, _, _, _ ->
+            searchInputQuery = text.toString()
+            searchBinding.clearImageView.isVisible = searchInputQuery.isNotEmpty()
+            if (searchBinding.inputEditText.hasFocus() && searchInputQuery.isNotEmpty()) {
+                showState(State.SEARCH_RESULT)
+            }
+        }
+
+        searchBinding.searchRecycler.adapter = trackAdapter
+        searchBinding.searchHistoryRecycler.adapter = historyAdapter
+
+        searchBinding.inputEditText.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus && searchBinding.inputEditText.text.isEmpty()) {
+                showState(State.SEARCH_RESULT)
+            }
+        }
 
         searchBinding.inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -75,6 +77,18 @@ class SearchActivity : AppCompatActivity() {
             false
         }
         refresh()
+
+        if (searchBinding.inputEditText.text.isEmpty()) {
+            historyAdapter.tracks = searchHistory.getTracks().toMutableList()
+            if (historyAdapter.tracks.isNotEmpty()) {
+                showState(State.TRACKS_HISTORY)
+            }
+        }
+
+        searchBinding.clearHistoryButton.setOnClickListener {
+            searchHistory.clear()
+            showState(State.SEARCH_RESULT)
+        }
     }
 
     private fun refresh() {
@@ -90,46 +104,46 @@ class SearchActivity : AppCompatActivity() {
                     call: Call<TrackResponse>,
                     response: Response<TrackResponse>
                 ) {
-                    if (searchBinding.inputEditText.text.isNotEmpty() && !response.body()?.results.isNullOrEmpty() && response.code() == 200) {
-                        adapter.tracks = response.body()?.results as MutableList<Track>
-                        showPlaceholder(Placeholder.SEARCH_RESULT)
-                    } else {
-                        showPlaceholder(Placeholder.NOTHING_FOUND)
+                    when (response.code()) {
+                        200 -> {
+                            if (response.body()?.results?.isNotEmpty() == true) {
+                                trackAdapter.tracks =
+                                    response.body()?.results!! as MutableList<Track>
+                                showState(State.SEARCH_RESULT)
+                            } else {
+                                showState(State.NOTHING_FOUND)
+                            }
+                        }
+
+                        else -> {
+                            showState(State.INTERNET_PROBLEM)
+                        }
                     }
                 }
 
                 override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                    showPlaceholder(Placeholder.INTERNET_PROBLEM)
+                    showState(State.INTERNET_PROBLEM)
                 }
             })
     }
 
-    fun showPlaceholder(placeholder: Placeholder) {
-        when (placeholder) {
-            Placeholder.NOTHING_FOUND -> {
-                searchBinding.searchRecycler.visibility = GONE
-                searchBinding.internetProblem.visibility = GONE
-                searchBinding.nothingFound.visibility = VISIBLE
-
-            }
-            Placeholder.INTERNET_PROBLEM -> {
-                searchBinding.searchRecycler.visibility = GONE
-                searchBinding.nothingFound.visibility = GONE
-                searchBinding.internetProblem.visibility = VISIBLE
-            }
-
-            else -> {
-                searchBinding.searchRecycler.visibility = VISIBLE
-                searchBinding.nothingFound.visibility = GONE
-                searchBinding.internetProblem.visibility = GONE
-            }
+    private fun showState(state: State) {
+        with(searchBinding) {
+            searchRecycler.visibility = if (state == State.SEARCH_RESULT) VISIBLE else GONE
+            nothingFound.visibility = if (state == State.NOTHING_FOUND) VISIBLE else GONE
+            internetProblem.visibility = if (state == State.INTERNET_PROBLEM) VISIBLE else GONE
+            searchHistoryLayout.visibility = if (state == State.TRACKS_HISTORY) VISIBLE else GONE
         }
     }
 
     private fun clearSearchForm() {
-        searchBinding.inputEditText.setText("")
-        adapter.tracks.clear()
-        showPlaceholder(Placeholder.SEARCH_RESULT)
+        searchBinding.inputEditText.text.clear()
+        historyAdapter.tracks = searchHistory.getTracks().toMutableList()
+        if (historyAdapter.tracks.isNotEmpty()) {
+            showState(State.TRACKS_HISTORY)
+        } else {
+            showState(State.SEARCH_RESULT)
+        }
         clearPlaceholders()
         val view = this.currentFocus
         if (view != null) {

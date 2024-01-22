@@ -1,5 +1,4 @@
 package com.example.playlist_maker
-
 data class Track(
     val trackId: Int,
     val trackName: String,
