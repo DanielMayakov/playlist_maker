@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PlayerActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include
+            android:id="@+id/toolbarInclude"
+            layout="@layout/toolbar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/leftBorder"
+            style="@style/constraintGuide_vertical"
+            app:layout_constraintGuide_begin="@dimen/constraintGuide_24" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/rightBorder"
+            style="@style/constraintGuide_vertical"
+            app:layout_constraintGuide_end="@dimen/constraintGuide_24" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/leftBorder_16"
+            style="@style/constraintGuide_vertical"
+            app:layout_constraintGuide_begin="@dimen/constraintGuide_16" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/rightBorder_16"
+            style="@style/constraintGuide_vertical"
+            app:layout_constraintGuide_end="@dimen/constraintGuide_16" />
+
+        <ImageView
+            android:id="@+id/media_trackImage"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toStartOf="@+id/rightBorder"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/leftBorder"
+            app:layout_constraintTop_toBottomOf="@+id/toolbarInclude"
+            app:srcCompat="@drawable/placeholder_media"
+            tools:ignore="ContentDescription,ImageContrastCheck" />
+
+        <TextView
+            android:id="@+id/trackName"
+            style="@style/player_track_long"
+            android:layout_marginTop="@dimen/marginTop_24"
+            android:textSize="@dimen/textSize_22"
+            app:layout_constraintEnd_toStartOf="@+id/rightBorder"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/leftBorder"
+            app:layout_constraintTop_toBottomOf="@+id/media_trackImage"
+            tools:text="Yesterday (Remastered 2009) Yesterday (Remastered 2009)" />
+
+        <TextView
+            android:id="@+id/artistName"
+            style="@style/player_track_long"
+            android:layout_marginTop="@dimen/marginTop_12"
+            android:textSize="@dimen/textSize_14"
+            app:layout_constraintEnd_toStartOf="@+id/rightBorder"
+            app:layout_constraintStart_toStartOf="@+id/leftBorder"
+            app:layout_constraintTop_toBottomOf="@+id/trackName"
+            tools:text="The Beatles The Beatles The Beatles The Beatles The Beatles The Beatles" />
+
+        <ImageView
+            android:id="@+id/addButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/add_button"
+            app:layout_constraintBottom_toBottomOf="@+id/playButton"
+            app:layout_constraintEnd_toStartOf="@id/playButton"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toStartOf="@+id/leftBorder"
+            app:layout_constraintTop_toTopOf="@+id/playButton"
+            tools:ignore="ContentDescription,ImageContrastCheck,SpeakableTextPresentCheck" />
+
+        <ImageView
+            android:id="@+id/playButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/marginTop_30"
+            android:src="@drawable/baseline_play_arrow_24"
+            app:layout_constraintEnd_toStartOf="@id/likeButton"
+            app:layout_constraintStart_toEndOf="@id/addButton"
+            app:layout_constraintTop_toBottomOf="@+id/artistName"
+            tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
+
+        <ImageView
+            android:id="@+id/likeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/like_button"
+            app:layout_constraintEnd_toStartOf="@+id/rightBorder"
+            app:layout_constraintStart_toEndOf="@id/playButton"
+            app:layout_constraintTop_toTopOf="@+id/addButton"
+            tools:ignore="ContentDescription,ImageContrastCheck,SpeakableTextPresentCheck" />
+
+        <TextView
+            android:id="@+id/track_country"
+            style="@style/player_textView"
+            android:layout_marginBottom="@dimen/marginBottom_28"
+            android:text="@string/country"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/leftBorder_16" />
+
+        <TextView
+            android:id="@+id/track_genre"
+            style="@style/player_textView"
+            android:layout_marginBottom="@dimen/marginBottom_17"
+            android:text="@string/genre"
+            app:layout_constraintBottom_toTopOf="@+id/track_country"
+            app:layout_constraintStart_toStartOf="@+id/leftBorder_16" />
+
+        <TextView
+            android:id="@+id/track_year"
+            style="@style/player_textView"
+            android:layout_marginBottom="@dimen/marginBottom_17"
+            android:text="@string/year"
+            app:layout_constraintBottom_toTopOf="@+id/track_genre"
+            app:layout_constraintStart_toStartOf="@+id/leftBorder_16" />
+
+        <TextView
+            android:id="@+id/track_album"
+            style="@style/player_textView"
+            android:layout_marginBottom="@dimen/marginBottom_17"
+            android:text="@string/album"
+            app:layout_constraintBottom_toTopOf="@+id/track_year"
+            app:layout_constraintStart_toStartOf="@+id/leftBorder_16" />
+
+        <TextView
+            android:id="@+id/track_duration"
+            style="@style/player_textView"
+            android:layout_marginTop="@dimen/marginTop_30"
+            android:layout_marginBottom="@dimen/marginBottom_17"
+            android:text="@string/duration"
+            app:layout_constraintBottom_toTopOf="@+id/track_album"
+            app:layout_constraintStart_toStartOf="@+id/leftBorder_16"
+            app:layout_constraintTop_toBottomOf="@+id/time" />
+
+        <TextView
+            android:id="@+id/country"
+            style="@style/player_textView_value"
+            android:layout_marginBottom="@dimen/marginBottom_28"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/rightBorder_16"
+            tools:text="Великобритания" />
+
+        <TextView
+            android:id="@+id/primary_genre_name"
+            style="@style/player_textView_value"
+            android:layout_marginBottom="@dimen/marginBottom_17"
+            app:layout_constraintBottom_toTopOf="@+id/country"
+            app:layout_constraintEnd_toStartOf="@+id/rightBorder_16"
+            tools:text="Rock" />
+
+        <TextView
+            android:id="@+id/release_date"
+            style="@style/player_textView_value"
+            android:layout_marginBottom="@dimen/marginBottom_17"
+            app:layout_constraintBottom_toTopOf="@+id/primary_genre_name"
+            app:layout_constraintEnd_toStartOf="@+id/rightBorder_16"
+            tools:text="1965" />
+
+        <TextView
+            android:id="@+id/collection_name"
+            style="@style/player_textView_long"
+            android:layout_marginStart="@dimen/marginStart_8"
+            android:layout_marginBottom="@dimen/marginBottom_17"
+            app:layout_constraintBottom_toTopOf="@+id/release_date"
+            app:layout_constraintEnd_toStartOf="@+id/rightBorder_16"
+            app:layout_constraintStart_toEndOf="@+id/track_album"
+            tools:text="Yesterday (Remastered 2009) Yesterday (Remastered 2009)" />
+
+        <TextView
+            android:id="@+id/trackTime"
+            style="@style/player_textView_value"
+            app:layout_constraintEnd_toStartOf="@+id/rightBorder_16"
+            app:layout_constraintTop_toTopOf="@+id/track_duration"
+            tools:text="5:35" />
+
+        <TextView
+            android:id="@+id/time"
+            style="@style/player_textView_value"
+            android:layout_marginTop="@dimen/marginTop_12"
+            android:text="@string/track_time"
+            app:layout_constraintEnd_toStartOf="@+id/rightBorder"
+            app:layout_constraintStart_toStartOf="@+id/leftBorder"
+            app:layout_constraintTop_toBottomOf="@+id/playButton" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

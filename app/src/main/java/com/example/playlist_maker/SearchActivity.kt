@@ -1,13 +1,18 @@
 package com.example.playlist_maker
 
+import android.content.Intent
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore.Audio.AudioColumns.TRACK
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
+import com.google.gson.Gson
 import com.example.playlist_maker.databinding.ActivitySearchBinding
 import retrofit2.Call
 import retrofit2.Callback
@@ -32,10 +37,19 @@ class SearchActivity : AppCompatActivity() {
     private val tracksApi = retrofit.create(TracksApi::class.java)
 
     private val trackAdapter = TrackAdapter {
-        searchHistory.addTrack(it)
+        showPlayer(it)
     }
+
     private val historyAdapter = TrackAdapter {
-        searchHistory.addTrack(it)
+        showPlayer(it)
+    }
+
+    private fun showPlayer(track: Track) {
+        searchHistory.addTrack(track)
+        val displayIntent = Intent(this, PlayerActivity::class.java).apply {
+            putExtra(TRACK, Gson().toJson(track))
+        }
+        startActivity(displayIntent)
     }
 
     companion object {
