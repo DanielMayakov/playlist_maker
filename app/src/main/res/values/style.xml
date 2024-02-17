@@ -136,4 +136,52 @@
         <item name="android:paddingTop">@dimen/padding_24</item>
     </style>
 
+    <style name="constraintGuide_vertical">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="player_toolbar">
+        <item name="android:background">@color/white</item>
+    </style>
+
+    <style name="player_textView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/ys_display</item>
+    </style>
+
+    <style name="player_textView_value">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/ys_display</item>
+        <item name="android:textColor">@color/search_form_text_color</item>
+    </style>
+
+    <style name="player_textView_long">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/ys_display</item>
+        <item name="android:textColor">@color/search_form_text_color</item>
+        <item name="android:gravity">end</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <style name="player_track_long">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/ys_display</item>
+        <item name="android:textColor">@color/search_form_text_color</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="player_active_button">
+        <item name="android:layout_width">@dimen/layout_width_48</item>
+        <item name="android:layout_height">@dimen/layout_height_48</item>
+        <item name="android:backgroundTint">@color/search_form_text_hint_color</item>
+    </style>
 </resources>
