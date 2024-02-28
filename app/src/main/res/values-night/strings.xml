@@ -9,6 +9,6 @@
     <string name="share_app"> Поделиться </string>
     <string name="call_center"> Call center </string>
     <string name="agreement"> Пользовательское соглашение</string>
-    <string name="track_time">0:30</string>
+    <string name="track_time">00:00</string>
     <string name="media_will_be_soon">Здесь будет медиа</string>
 </resources>
