@@ -8,13 +8,10 @@ import android.os.Looper
 import android.provider.MediaStore.Audio.AudioColumns.TRACK
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
-import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
-import androidx.core.widget.doOnTextChanged
 import com.google.gson.Gson
 import com.example.playlist_maker.databinding.ActivitySearchBinding
 import retrofit2.Call
@@ -110,13 +107,8 @@ class SearchActivity : AppCompatActivity() {
 
         searchBinding.settingsToolbar.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
         searchBinding.clearImageView.setOnClickListener { clearSearchForm() }
-        searchBinding.inputEditText.doOnTextChanged { text, _, _, _ ->
-            searchInputQuery = text.toString()
-            searchBinding.clearImageView.isVisible = searchInputQuery.isNotEmpty()
-            if (searchBinding.inputEditText.hasFocus() && searchInputQuery.isNotEmpty()) {
-                showState(State.SEARCH_RESULT)
-            }
-        }
+        searchBinding.inputEditText.addTextChangedListener(simpleTextWatcher)
+
         searchBinding.searchRecycler.adapter = trackAdapter
         searchBinding.searchHistoryRecycler.adapter = historyAdapter
 
@@ -126,16 +118,10 @@ class SearchActivity : AppCompatActivity() {
             }
         }
 
-        searchBinding.inputEditText.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                searchTrack()
-            }
-            false
-        }
         refresh()
 
         if (searchBinding.inputEditText.text.isEmpty()) {
-            historyAdapter.tracks = searchHistory.getTracks().toMutableList()
+            historyAdapter.tracks = searchHistory.getTracks()
             if (historyAdapter.tracks.isNotEmpty()) {
                 showState(State.TRACKS_HISTORY)
             }
@@ -186,26 +172,43 @@ class SearchActivity : AppCompatActivity() {
     }
 
     fun showState(state: State) {
-        searchBinding.searchRecycler.visibility = when (state) {
-            State.NOTHING_FOUND -> View.GONE
-            State.INTERNET_PROBLEM -> View.GONE
-            State.SEARCH_RESULT -> View.VISIBLE
-            else -> View.GONE
-        }
+        when (state) {
+            State.NOTHING_FOUND -> {
+                searchBinding.searchRecycler.visibility = GONE
+                searchBinding.internetProblem.visibility = GONE
+                searchBinding.searchHistoryLayout.visibility = GONE
+                searchBinding.nothingFound.visibility = VISIBLE
+                searchBinding.progressBar.visibility = GONE
+            }
 
-        searchBinding.nothingFound.visibility =
-            if (state == State.NOTHING_FOUND) View.VISIBLE else View.GONE
-        searchBinding.internetProblem.visibility =
-            if (state == State.INTERNET_PROBLEM) View.VISIBLE else View.GONE
-        searchBinding.searchHistoryLayout.visibility =
-            if (state != State.SEARCH_RESULT) View.GONE else View.VISIBLE
-        searchBinding.progressBar.visibility =
-            if (state == State.SEARCH_RESULT) View.GONE else View.VISIBLE
+            State.INTERNET_PROBLEM -> {
+                searchBinding.searchRecycler.visibility = GONE
+                searchBinding.nothingFound.visibility = GONE
+                searchBinding.searchHistoryLayout.visibility = GONE
+                searchBinding.internetProblem.visibility = VISIBLE
+                searchBinding.progressBar.visibility = GONE
+            }
+
+            State.SEARCH_RESULT -> {
+                searchBinding.nothingFound.visibility = GONE
+                searchBinding.internetProblem.visibility = GONE
+                searchBinding.searchHistoryLayout.visibility = GONE
+                searchBinding.searchRecycler.visibility = VISIBLE
+                searchBinding.progressBar.visibility = GONE
+            }
+
+            else -> {
+                searchBinding.searchRecycler.visibility = GONE
+                searchBinding.nothingFound.visibility = GONE
+                searchBinding.internetProblem.visibility = GONE
+                searchBinding.searchHistoryLayout.visibility = VISIBLE
+            }
+        }
     }
 
     private fun clearSearchForm() {
         searchBinding.inputEditText.setText("")
-        historyAdapter.tracks = searchHistory.getTracks().toMutableList()
+        historyAdapter.tracks = searchHistory.getTracks()
         if (historyAdapter.tracks.isNotEmpty()) {
             showState(State.TRACKS_HISTORY)
         } else {
